@@ -26,9 +26,8 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
-
 
 // middlewear to hash the passowrd
 userSchema.pre("save", async function () {
@@ -42,9 +41,6 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-
 const userModel = mongoose.model("User", userSchema);
-
-
 
 export default userModel;
