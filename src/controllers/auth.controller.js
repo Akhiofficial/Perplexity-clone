@@ -150,8 +150,6 @@ export async function verifyEmail(req, res) {
     const { token } = req.query;
 
     try {
-
-
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
 
@@ -184,4 +182,54 @@ export async function verifyEmail(req, res) {
             err: err.message
         })
     }
+}
+
+/**
+ * @desc Resend verification email
+ * @route POST /api/auth/resend-verification
+ * @access Public
+ * @body { email }
+ */
+export async function resendVerificationEmail(req, res) {
+    const { email } = req.body;
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+        return res.status(404).json({
+            message: "User not found",
+            success: false,
+            err: "User not found"
+        });
+    }
+
+    if (user.verified) {
+        return res.status(400).json({
+            message: "Email is already verified",
+            success: false,
+            err: "Email already verified"
+        });
+    }
+
+    // Generate new verification token
+    const emailVerificationToken = jwt.sign({
+        email: user.email,
+    }, process.env.JWT_SECRET);
+
+    await sendEmail({
+        to: email,
+        subject: "Verify Your Email - Perplexity",
+        html: `
+                <p>Hi ${user.username},</p>
+                <p>Please verify your email address by clicking the link below:</p>
+                <a href="http://localhost:3000/api/auth/verify-email?token=${emailVerificationToken}">Verify Email</a>
+                <p>If you did not create an account, please ignore this email.</p>
+                <p>Best regards,<br>The Perplexity Team</p>
+        `
+    });
+
+    res.status(200).json({
+        message: "Verification email sent successfully",
+        success: true
+    });
 }

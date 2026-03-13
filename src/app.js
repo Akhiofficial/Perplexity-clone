@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
-import { test } from "./services/ai.service.js";
 
 const app = express();
 
@@ -17,9 +16,7 @@ app.use("/api/auth", authRouter);
 
 // Health Check
 app.get("/", (req, res) => {
-    res.send("API is running...");
+  res.send("API is running...");
 });
-
-test();
 
 export default app;
