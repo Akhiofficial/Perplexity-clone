@@ -27,8 +27,7 @@ const Register = () => {
   const user = useSelector(state => state.auth.user)
   const loading = useSelector(state => state.auth.loading)
 
-  // it wonts allow to user goes to register page when user loggedin 
-  // if user is already logged in then redirect to dashboard
+  // it wonts allow to user goes to register page when user logged in
   if(!loading && user) return <Navigate to="/" />
 
 
