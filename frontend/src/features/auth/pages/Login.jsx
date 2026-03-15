@@ -2,21 +2,30 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  // selecting the user and loading from the auth slice
+  const user = useSelector(state => state.auth.user)
+  const loading = useSelector(state => state.auth.loading)
+
   const { handleLogin } = useAuth();
   const navigate = useNavigate();
 
   const submitForm = async (e) => {
-    
+
     e.preventDefault();
     await handleLogin(email, password);
     navigate('/');
   };
+
+  // if user is already logged in then redirect to dashboard
+  if(!loading && user) return <Navigate to="/" />
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-brand-bg text-brand-text selection:bg-brand-primary/30 font-sans antialiased">

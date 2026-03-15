@@ -1,22 +1,36 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router';
 
-const Signup = () => {
+
+const Register = () => {
+
+ 
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const submitForm = (e) => {
+  const { handleRegister } = useAuth();
+  const navigate = useNavigate();
+
+  const submitForm = async (e) => {
     e.preventDefault();
-    const payload = {
-      username,
-      email,
-      password,
-    };
-    console.log('Signup payload:', payload);
+    await handleRegister(username, email, password);
+    navigate('/');
   };
+
+  const user = useSelector(state => state.auth.user)
+  const loading = useSelector(state => state.auth.loading)
+
+  // it wonts allow to user goes to register page when user loggedin 
+  // if user is already logged in then redirect to dashboard
+  if(!loading && user) return <Navigate to="/" />
+
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-brand-bg text-brand-text selection:bg-brand-primary/30 font-sans antialiased">
@@ -158,4 +172,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Register;
