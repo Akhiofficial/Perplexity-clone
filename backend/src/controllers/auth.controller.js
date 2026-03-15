@@ -2,7 +2,6 @@ import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../services/mail.service.js";
 
-
 /**
  * @desc Register a new user
  * @route POST /api/auth/register
@@ -167,14 +166,7 @@ export async function verifyEmail(req, res) {
 
         await user.save();
 
-        const html =
-            `
-        <h1>Email Verified Successfully!</h1>
-        <p>Your email has been verified. You can now log in to your account.</p>
-        <a href="http://localhost:3000/login">Go to Login</a>
-    `
-
-        return res.send(html);
+        return res.redirect(process.env.FRONTEND_URL + "/verify-success");
     } catch (err) {
         return res.status(400).json({
             message: "Invalid or expired token",
