@@ -3,6 +3,7 @@ import cors from "cors";
 import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import chatRouter from "./routes/chat.routes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRouter);
+app.use("/api/chats", chatRouter);
 
 // Health Check
 app.get("/", (req, res) => {

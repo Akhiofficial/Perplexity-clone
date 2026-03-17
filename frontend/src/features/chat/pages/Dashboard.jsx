@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useChat } from '../hooks/useChat'
+import Sidebar from '../components/Sidebar'
+import SearchSection from '../components/SearchSection'
 
 const Dashboard = () => {
 
@@ -13,11 +15,10 @@ const Dashboard = () => {
         chat.initializeSocketConnection;
     }, [])
 
-    
-
   return (
-    <div>
-        <h1>Dashboard</h1>
+    <div className="flex bg-brand-bg text-brand-text h-screen overflow-hidden">
+        <Sidebar />
+        <SearchSection />
     </div>
   )
 }
