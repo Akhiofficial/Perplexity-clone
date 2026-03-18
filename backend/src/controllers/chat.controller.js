@@ -41,8 +41,8 @@ export async function sendMessage(req, res) {
     return res.status(201).json({
         title,
         chat,
-        aiMessage,
-        userMessage
+        userMessage,
+        aiMessage
     })
 
 }
