@@ -225,3 +225,16 @@ export async function resendVerificationEmail(req, res) {
         success: true
     });
 }
+
+/**
+ * @desc Logout user and clear cookie
+ * @route GET /api/auth/logout
+ * @access Public
+ */
+export async function logout(req, res) {
+    res.clearCookie("token");
+    res.status(200).json({
+        message: "Logged out successfully",
+        success: true
+    });
+}

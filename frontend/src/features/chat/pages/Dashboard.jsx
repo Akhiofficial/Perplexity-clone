@@ -2,24 +2,28 @@ import React, { useEffect, useState, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useSelector } from 'react-redux'
 import { useChat } from '../hooks/useChat'
-import { 
-  Plus, 
-  Clock, 
-  Bookmark, 
-  FolderOpen, 
-  Settings, 
-  Share2, 
-  MoreHorizontal, 
-  Zap, 
-  Paperclip, 
-  ArrowUp,
-  Globe,
-  LayoutGrid
+import { useAuth } from '../../auth/hooks/useAuth'
+import {
+    Plus,
+    Clock,
+    Bookmark,
+    FolderOpen,
+    Settings,
+    LogOut,
+    Share2,
+    MoreHorizontal,
+    Zap,
+    Paperclip,
+    ArrowUp,
+    Globe,
+    LayoutGrid
 } from 'lucide-react'
 
 const Dashboard = () => {
     const chat = useChat()
+    const auth = useAuth()
     const [chatInput, setChatInput] = useState('')
+    const user = useSelector(state => state.auth.user)
     const { chats, currentChatId, isLoading } = useSelector(state => state.chat)
     const scrollRef = useRef(null)
 
@@ -46,7 +50,7 @@ const Dashboard = () => {
 
     return (
         <div className="flex h-screen bg-[#0c0c0e] text-[#f0f0f0] font-sans selection:bg-[#19c9c8]/30 overflow-hidden">
-            
+
             {/* ──────── SIDEBAR ──────── */}
             <aside className="w-[230px] shrink-0 bg-[#0f0f11] border-r border-white/5 flex flex-col p-4">
                 {/* Logo */}
@@ -58,7 +62,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* New Search Button */}
-                <button 
+                <button
                     onClick={() => chat.handleOpenChat(null)}
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#19c9c8] text-black font-bold text-sm mb-8 hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-[#19c9c8]/10"
                 >
@@ -75,11 +79,10 @@ const Dashboard = () => {
                                 <button
                                     key={c.id || c._id}
                                     onClick={() => chat.handleOpenChat(c.id || c._id)}
-                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all group ${
-                                        (c.id || c._id) === currentChatId 
-                                        ? 'bg-white/10 text-white font-medium' 
+                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all group ${(c.id || c._id) === currentChatId
+                                        ? 'bg-white/10 text-white font-medium'
                                         : 'text-white/50 hover:bg-white/5 hover:text-white'
-                                    }`}
+                                        }`}
                                 >
                                     <Clock size={15} className={`${(c.id || c._id) === currentChatId ? 'text-[#19c9c8]' : 'text-white/20 group-hover:text-white/40'}`} />
                                     <span className="text-[13px] truncate leading-tight">{c.title || 'Untitled'}</span>
@@ -99,20 +102,28 @@ const Dashboard = () => {
 
                 {/* User Profile */}
                 <div className="mt-4 pt-4 border-t border-white/5">
-                    <div className="flex items-center gap-3 p-2 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/8 cursor-pointer transition-colors">
-                        <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center font-bold text-xs text-white">AR</div>
+                    <div className="flex items-center gap-3 p-2 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/8 transition-colors group">
+                        <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-xs text-brand-primary uppercase">
+                            {user?.username?.substring(0, 2) || 'AI'}
+                        </div>
                         <div className="flex-1 overflow-hidden">
-                            <p className="text-xs font-semibold truncate">Alex Rivera</p>
+                            <p className="text-xs font-semibold truncate">{user?.username || 'User'}</p>
                             <p className="text-[10px] text-[#19c9c8] font-bold">Pro Member</p>
                         </div>
-                        <Settings size={15} className="text-white/30 hover:text-white transition-colors" />
+                        <button 
+                            onClick={() => auth.handleLogout()}
+                            title="Log out"
+                            className="p-1.5 rounded-lg hover:bg-white/10 text-white/30 hover:text-red-400 transition-all"
+                        >
+                            <LogOut size={15} />
+                        </button>
                     </div>
                 </div>
             </aside>
 
             {/* ──────── MAIN CONTENT ──────── */}
             <main className="flex-1 flex flex-col relative min-w-0">
-                
+
                 {/* Header (Breadcrumb) */}
                 <header className="flex items-center justify-between h-14 px-8 border-b border-white/5">
                     <div className="flex items-center gap-2 text-[13px] text-white/50">
@@ -132,7 +143,7 @@ const Dashboard = () => {
                         /* Initial View */
                         <div className="h-full flex flex-col items-center justify-center space-y-8 pb-20 px-8">
                             <h2 className="text-5xl font-bold tracking-tight text-center font-outfit leading-tight bg-linear-to-b from-white to-white/60 bg-clip-text text-transparent">
-                                What do you <br/> want to know?
+                                What do you <br /> want to know?
                             </h2>
                             <div className="w-full max-w-2xl">
                                 <SearchInput value={chatInput} onChange={setChatInput} onSubmit={handleSubmitMessage} />
@@ -152,7 +163,7 @@ const Dashboard = () => {
                     ) : (
                         /* Chat Active View */
                         <div className="max-w-3xl mx-auto px-8 py-10 space-y-12 pb-40">
-                            
+
                             {/* Heading (styled like screenshot) */}
                             <h1 className="text-4xl font-extrabold tracking-tight leading-tight font-outfit">
                                 {currentChat?.messages?.[0]?.content?.split(' ').map((word, i, arr) => (
@@ -179,17 +190,24 @@ const Dashboard = () => {
                                             /* AI RESPONSE */
                                             <div className="space-y-6">
                                                 {/* Sources Grid (Mock Sources for UI) */}
-                                                {idx === 1 && (
-                                                  <div className="space-y-4">
-                                                      <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-white/40 uppercase">
-                                                          <LayoutGrid size={12} strokeWidth={3} /> Sources
-                                                      </div>
-                                                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                                          <SourceCard icon="橙" site="UX Collective" desc="The evolution of Glassmorphism in 2024 UI Trends." id="1" />
-                                                          <SourceCard icon="🟩" site="CSS-Tricks" desc="Mastering backdrop-filter and transparency." id="2" />
-                                                          <SourceCard icon="⬛" site="NN/g" desc="Accessibility concerns with translucent UI." id="3" />
-                                                      </div>
-                                                  </div>
+                                                {msg.sources && msg.sources.length > 0 && (
+                                                    <div className="space-y-4">
+                                                        <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-white/40 uppercase">
+                                                            <LayoutGrid size={12} strokeWidth={3} /> Sources
+                                                        </div>
+                                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                                            {msg.sources.map((source, sIdx) => (
+                                                                <SourceCard 
+                                                                    key={sIdx}
+                                                                    icon={source.url?.split('/')[2]?.[0]?.toUpperCase() || 'S'} 
+                                                                    site={source.title || 'Source'} 
+                                                                    desc={source.content || ''} 
+                                                                    id={sIdx + 1} 
+                                                                    url={source.url}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                 )}
 
                                                 <div className="space-y-4">
@@ -204,14 +222,14 @@ const Dashboard = () => {
                                                                 ul: ({ children }) => <ul className="mb-4 list-disc pl-5 space-y-2">{children}</ul>,
                                                                 li: ({ children }) => <li>{children}</li>,
                                                                 code: ({ children }) => (
-                                                                  <code className="text-[#19c9c8] bg-[#19c9c8]/10 px-1.5 py-0.5 rounded font-mono text-sm border border-[#19c9c8]/20">
-                                                                    {children}
-                                                                  </code>
+                                                                    <code className="text-[#19c9c8] bg-[#19c9c8]/10 px-1.5 py-0.5 rounded font-mono text-sm border border-[#19c9c8]/20">
+                                                                        {children}
+                                                                    </code>
                                                                 ),
                                                                 pre: ({ children }) => (
-                                                                  <pre className="p-4 rounded-2xl bg-black/40 border border-white/10 overflow-x-auto mb-4 scrollbar-thin scrollbar-thumb-white/10">
-                                                                    {children}
-                                                                  </pre>
+                                                                    <pre className="p-4 rounded-2xl bg-black/40 border border-white/10 overflow-x-auto mb-4 scrollbar-thin scrollbar-thumb-white/10">
+                                                                        {children}
+                                                                    </pre>
                                                                 ),
                                                             }}
                                                         >
@@ -237,18 +255,18 @@ const Dashboard = () => {
 
                 {/* Fixed Bottom Input Bar */}
                 {currentChatId && (
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-[#0c0c0e] via-[#0c0c0e]/90 to-transparent">
-                      <div className="max-w-3xl mx-auto">
-                          <SearchInput 
-                              value={chatInput} 
-                              onChange={setChatInput} 
-                              onSubmit={handleSubmitMessage} 
-                              placeholder="Ask a follow-up question..." 
-                              compact 
-                          />
-                          <p className="text-center text-[10px] text-white/20 mt-3 font-medium uppercase tracking-tighter">Perplexity AI can make mistakes. Verify your facts.</p>
-                      </div>
-                  </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-[#0c0c0e] via-[#0c0c0e]/90 to-transparent">
+                        <div className="max-w-3xl mx-auto">
+                            <SearchInput
+                                value={chatInput}
+                                onChange={setChatInput}
+                                onSubmit={handleSubmitMessage}
+                                placeholder="Ask a follow-up question..."
+                                compact
+                            />
+                            <p className="text-center text-[10px] text-white/20 mt-3 font-medium uppercase tracking-tighter">Perplexity AI can make mistakes. Verify your facts.</p>
+                        </div>
+                    </div>
                 )}
             </main>
         </div>
@@ -263,7 +281,7 @@ const SearchInput = ({ value, onChange, onSubmit, placeholder = "Ask anything...
             <div className="pl-4 flex items-center text-white/40">
                 <Paperclip size={18} className="hover:text-white transition-colors cursor-pointer" />
             </div>
-            <input 
+            <input
                 type="text"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
@@ -272,7 +290,7 @@ const SearchInput = ({ value, onChange, onSubmit, placeholder = "Ask anything...
             />
             <div className="flex items-center gap-2">
                 <div className="pro-badge hidden md:block">⚡ &nbsp;Pro</div>
-                <button 
+                <button
                     disabled={!value.trim()}
                     className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${value.trim() ? 'bg-[#19c9c8] text-black shadow-lg shadow-[#19c9c8]/30 scale-100' : 'bg-white/5 text-white/20 scale-90'}`}
                 >
@@ -283,15 +301,15 @@ const SearchInput = ({ value, onChange, onSubmit, placeholder = "Ask anything...
     </div>
 )
 
-const SourceCard = ({ icon, site, desc, id }) => (
-    <div className="bg-white/4 border border-white/10 rounded-2xl p-4 hover:bg-white/7 transition-all cursor-pointer group">
+const SourceCard = ({ icon, site, desc, id, url }) => (
+    <a href={url} target="_blank" rel="noopener noreferrer" className="bg-white/4 border border-white/10 rounded-2xl p-4 hover:bg-white/7 transition-all cursor-pointer group block">
         <div className="flex items-center gap-2 mb-2">
             <div className="w-5 h-5 rounded bg-white/10 flex items-center justify-center text-[10px]">{icon}</div>
             <span className="text-xs font-bold truncate text-white/90">{site}</span>
         </div>
         <p className="text-[11px] leading-relaxed text-white/50 line-clamp-2 mb-3">{desc}</p>
         <span className="text-[10px] font-bold text-white/20">{id}</span>
-    </div>
+    </a>
 )
 
 const LibraryItem = ({ icon, label }) => (

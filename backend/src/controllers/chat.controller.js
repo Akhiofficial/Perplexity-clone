@@ -28,22 +28,23 @@ export async function sendMessage(req, res) {
         chat: chatId || chat._id
     })
 
-    const result = await generateResponse(messages);
-
-    const aiMessage = await messageModel.create({
-        chat: chatId || chat._id,
-        content: result,
-        role: "ai"
-    })
-
-
-
-    return res.status(201).json({
-        title,
-        chat,
-        userMessage,
-        aiMessage
-    })
+    const { content, sources } = await generateResponse(messages);
+  
+      const aiMessage = await messageModel.create({
+          chat: chatId || chat._id,
+          content: content,
+          sources: sources,
+          role: "ai"
+      })
+  
+  
+  
+      return res.status(201).json({
+          title,
+          chat,
+          userMessage,
+          aiMessage
+      })
 
 }
 
@@ -53,8 +54,8 @@ export async function getChats(req, res) {
     const chats = await chatModel.find({
         user: req.user.id
     })
-    
-    
+
+
     return res.status(200).json({
         message: "Chats fetched successfully",
         chats

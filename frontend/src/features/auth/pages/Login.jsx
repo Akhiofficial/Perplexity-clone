@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Zap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
 import { useSelector } from 'react-redux';
@@ -33,16 +33,9 @@ const Login = () => {
       <header className="flex items-center justify-between px-6 py-6 w-full max-w-7xl mx-auto z-10">
         <div className="flex items-center gap-3 group cursor-pointer">
           <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center transition-transform group-hover:scale-105 shadow-lg shadow-brand-primary/20">
-            <svg
-              className="w-5 h-5 text-brand-bg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
+            <Zap size={18} className="text-black fill-black" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-brand-text">AI Insights</span>
+          <span className="text-xl font-bold tracking-tight text-brand-text font-outfit">Perplexity AI</span>
         </div>
         <div className="text-[13px]">
           <span className="text-gray-400">New here? </span>
@@ -56,11 +49,11 @@ const Login = () => {
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-10 w-full">
         <div className="w-full max-w-[420px] text-center">
           <div className="mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-brand-text mb-3 tracking-tight leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-brand-text mb-3 tracking-tight leading-tight font-outfit">
               Welcome back
             </h1>
             <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-[340px] mx-auto">
-              Sign in to continue your journey with AI Insights.
+              Sign in to continue your journey with Perplexity AI.
             </p>
           </div>
 
@@ -134,7 +127,7 @@ const Login = () => {
       {/* Footer */}
       <footer className="px-6 py-10 w-full max-w-7xl mx-auto flex justify-between items-center opacity-60">
         <p className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase">
-          © {new Date().getFullYear()} AI Insights
+          © {new Date().getFullYear()} Perplexity AI
         </p>
         <div className="flex gap-6">
           <Link to="#" className="text-[10px] font-bold tracking-[0.2em] hover:text-brand-text transition-colors uppercase">Twitter</Link>

@@ -1,9 +1,16 @@
 import { Router } from "express";
-import { register, verifyEmail, login, getMe, resendVerificationEmail } from "../controllers/auth.controller.js";
+import { register, verifyEmail, login, getMe, resendVerificationEmail, logout } from "../controllers/auth.controller.js";
 import { registerValidator, loginValidator, resendVerificationValidator } from "../validators/auth.validator.js";
 import { authUser } from "../middleware/auth.middleware.js";
 
 const authRouter = Router();
+
+/**
+ * @route GET /api/auth/logout
+ * @desc Logout user and clear cookie
+ * @access Public
+ */
+authRouter.get("/logout", logout);
 
 /**
  * @route POST /api/auth/register

@@ -12,7 +12,7 @@ const chatSlice = createSlice({
     reducers: {
         createNewChat: (state, action) => {
             const { chatId, title } = action.payload
-            state.chats[ chatId ] = {
+            state.chats[chatId] = {
                 id: chatId,
                 title,
                 messages: [],
@@ -20,12 +20,12 @@ const chatSlice = createSlice({
             }
         },
         addNewMessage: (state, action) => {
-            const { chatId, content, role } = action.payload
-            state.chats[ chatId ].messages.push({ content, role })
+            const { chatId, content, role, sources } = action.payload
+            state.chats[chatId].messages.push({ content, role, sources })
         },
         addMessages: (state, action) => {
             const { chatId, messages } = action.payload
-            state.chats[ chatId ].messages.push(...messages)
+            state.chats[chatId].messages.push(...messages)
         },
         setChats: (state, action) => {
             state.chats = action.payload

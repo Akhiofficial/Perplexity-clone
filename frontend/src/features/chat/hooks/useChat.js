@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 export const useChat = () => {
     const dispatch = useDispatch()
     const currentChatId = useSelector(state => state.chat.currentChatId)
-    
+
     async function handleSendMessage({ message, chatId }) {
         dispatch(setLoading(true))
         try {
@@ -30,11 +30,12 @@ export const useChat = () => {
                 content: message,
                 role: "user",
             }))
-            
+
             dispatch(addNewMessage({
                 chatId: chat._id,
                 content: aiMessage.content,
                 role: aiMessage.role,
+                sources: aiMessage.sources, // Include sources
             }))
         } catch (err) {
             dispatch(setError(err.message))
@@ -49,7 +50,7 @@ export const useChat = () => {
             const data = await getChats()
             const { chats } = data
             dispatch(setChats(chats.reduce((acc, chat) => {
-                acc[ chat._id ] = {
+                acc[chat._id] = {
                     id: chat._id,
                     title: chat.title,
                     messages: [], // messages will load when chat is opened
@@ -78,6 +79,7 @@ export const useChat = () => {
             const formattedMessages = messages.map(msg => ({
                 content: msg.content,
                 role: msg.role,
+                sources: msg.sources, // Include sources
             }))
             // Clear and set messages
             dispatch(addMessages({
@@ -91,10 +93,26 @@ export const useChat = () => {
         }
     }
 
+    async function handleDeleteChat(chatId) {
+        dispatch(setLoading(true))
+        try {
+            await deleteChat(chatId)
+            dispatch(removeChat(chatId))
+            if (currentChatId === chatId) {
+                dispatch(setCurrentChatId(null))
+            }
+        } catch (err) {
+            dispatch(setError(err.message))
+        } finally {
+            dispatch(setLoading(false))
+        }
+    }
+
     return {
         initializeSocketConnection,
         handleSendMessage,
         handleGetChats,
-        handleOpenChat
+        handleOpenChat,
+        handleDeleteChat
     }
 }
