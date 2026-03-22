@@ -46,7 +46,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/chats", chatRouter);
 
 // Serve Frontend Static Files in Production
-const frontendPath = path.join(__dirname, "../../frontend/dist");
+const frontendPath = path.join(__dirname, "../public");
 app.use(express.static(frontendPath));
 
 // Health Check / API Root
