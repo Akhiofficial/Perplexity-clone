@@ -13,6 +13,7 @@ const Login = () => {
   // selecting the user and loading from the auth slice
   const user = useSelector(state => state.auth.user)
   const loading = useSelector(state => state.auth.loading)
+  const error = useSelector(state => state.auth.error)
 
   const { handleLogin } = useAuth();
   const navigate = useNavigate();
@@ -20,8 +21,10 @@ const Login = () => {
   const submitForm = async (e) => {
 
     e.preventDefault();
-    await handleLogin(email, password);
-    navigate('/');
+    const success = await handleLogin(email, password);
+    if (success) {
+      navigate('/');
+    }
   };
 
   // if user is already logged in then redirect to dashboard
@@ -56,6 +59,12 @@ const Login = () => {
               Sign in to continue your journey with Perplexity AI.
             </p>
           </div>
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-medium animate-in fade-in slide-in-from-top-1">
+              {error}
+            </div>
+          )}
 
           <form className="space-y-8 w-full text-left" onSubmit={submitForm}>
             <div className="space-y-6">
@@ -111,10 +120,11 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-brand-primary hover:bg-opacity-90 text-brand-bg font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] mt-10 group/btn shadow-xl shadow-brand-primary/10"
+              disabled={loading}
+              className={`w-full bg-brand-primary hover:bg-opacity-90 text-brand-bg font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] mt-10 group/btn shadow-xl shadow-brand-primary/10 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              <span className="text-base md:text-lg">Login</span>
-              <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
+              <span className="text-base md:text-lg">{loading ? 'Logging in...' : 'Login'}</span>
+              {!loading && <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />}
             </button>
           </form>
 

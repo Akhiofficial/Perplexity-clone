@@ -18,7 +18,7 @@ const VerifySuccess = () => {
               <path d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <span className="text-xl font-bold tracking-tight text-brand-text">AI Insights</span>
+          <span className="text-xl font-bold tracking-tight text-brand-text font-outfit">Perplexity AI</span>
         </div>
       </header>
 
@@ -30,11 +30,11 @@ const VerifySuccess = () => {
           </div>
           
           <div className="mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-brand-text mb-3 tracking-tight leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-brand-text mb-3 tracking-tight leading-tight font-outfit">
               Email Verified!
             </h1>
             <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-[400px] mx-auto">
-              Your account is now ready. You've successfully verified your email and can now access AI Insights.
+              Your account is now ready. You've successfully verified your email and can now access Perplexity AI.
             </p>
           </div>
 
@@ -59,7 +59,7 @@ const VerifySuccess = () => {
       {/* Footer */}
       <footer className="px-6 py-10 w-full max-w-7xl mx-auto flex justify-between items-center opacity-60">
         <p className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase">
-          © {new Date().getFullYear()} AI Insights
+          © {new Date().getFullYear()} Perplexity AI
         </p>
         <div className="flex gap-6">
           <Link to="#" className="text-[10px] font-bold tracking-[0.2em] hover:text-brand-text transition-colors uppercase">Twitter</Link>

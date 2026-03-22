@@ -14,18 +14,22 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const { handleRegister } = useAuth();
   const navigate = useNavigate();
 
   const submitForm = async (e) => {
     e.preventDefault();
-    await handleRegister(username, email, password);
-    navigate('/');
+    const success = await handleRegister(username, email, password);
+    if (success) {
+      setIsSuccess(true);
+    }
   };
 
   const user = useSelector(state => state.auth.user)
   const loading = useSelector(state => state.auth.loading)
+  const error = useSelector(state => state.auth.error)
 
   // it wonts allow to user goes to register page when user logged in
   if(!loading && user) return <Navigate to="/" />
@@ -61,7 +65,28 @@ const Register = () => {
             </p>
           </div>
 
-          <form className="space-y-8 w-full text-left" onSubmit={submitForm}>
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-medium animate-in fade-in slide-in-from-top-1">
+              {error}
+            </div>
+          )}
+
+          {isSuccess ? (
+            <div className="bg-brand-surface/50 p-8 rounded-2xl border border-brand-primary/20 text-center animate-in fade-in zoom-in-95 duration-500">
+              <div className="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 text-brand-primary">
+                <Mail size={32} />
+              </div>
+              <h2 className="text-2xl font-bold mb-4">Check your email</h2>
+              <p className="text-gray-400 mb-8 leading-relaxed">
+                We've sent a verification link to <span className="text-brand-text font-medium">{email}</span>. 
+                Please verify your account to continue.
+              </p>
+              <Link to="/login" className="text-brand-primary hover:underline font-semibold">
+                Back to login
+              </Link>
+            </div>
+          ) : (
+            <form className="space-y-8 w-full text-left" onSubmit={submitForm}>
             <div className="space-y-6">
               {/* Username */}
               <div className="space-y-2">
@@ -136,12 +161,14 @@ const Register = () => {
 
             <button
               type="submit"
-              className="w-full bg-brand-primary hover:bg-opacity-90 text-brand-bg font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] mt-10 group/btn shadow-xl shadow-brand-primary/10"
+              disabled={loading}
+              className={`w-full bg-brand-primary hover:bg-opacity-90 text-brand-bg font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] mt-10 group/btn shadow-xl shadow-brand-primary/10 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              <span className="text-base md:text-lg">Sign Up</span>
-              <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
+              <span className="text-base md:text-lg">{loading ? 'Creating account...' : 'Sign Up'}</span>
+              {!loading && <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />}
             </button>
           </form>
+          )}
 
           <p className="mt-8 text-[12px] text-gray-500 leading-relaxed">
             By signing up, you agree to our{' '}

@@ -1,0 +1,19 @@
+{
+  "name": "perplexity-clone-monolith",
+  "version": "1.0.0",
+  "description": "Monolithic Perplexity clone",
+  "main": "backend/server.js",
+  "scripts": {
+    "install-all": "npm install && npm install --prefix backend && npm install --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "start": "node backend/server.js",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.3.1"
+  }
+}
