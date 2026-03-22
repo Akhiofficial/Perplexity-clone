@@ -3,7 +3,7 @@ import { User, Mail, Lock, Eye, EyeOff, ArrowRight, Zap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
 
 const Register = () => {
